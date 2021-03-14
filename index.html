@@ -1,0 +1,133 @@
+<!-- Реализовать slider выбора цвета текста и фона. 
+  1. Слайдер на странице должен быть один
+  2. Переключение между настройками текста и фона происходит через переключатель
+  3. Изменения применяются мгновенно
+  -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Color slider</title>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" />
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+      var color = {
+        value: 'fg',
+        get type() {
+          return this.value
+        },
+        set type(value) {
+          this.value = value
+          $('.button_fg').css('background-color', color.type === 'fg' ? 'cornflowerblue' : 'white')
+          $('.button_bg').css('background-color', color.type === 'bg' ? 'cornflowerblue' : 'white')
+        }
+      }
+      $(function () {
+        function hexFromRGB(r, g, b) {
+          var hex = [r.toString(16), g.toString(16), b.toString(16)]
+          $.each(hex, function (nr, val) {
+            if (val.length === 1) {
+              hex[nr] = '0' + val
+            }
+          })
+          return hex.join('').toUpperCase()
+        }
+        function refreshPreview() {
+          var red = $('.slider_red').slider('value'),
+            green = $('.slider_green').slider('value'),
+            blue = $('.slider_blue').slider('value'),
+            hex = hexFromRGB(red, green, blue)
+          color.type === 'bg'
+            ? $('.preview').css('background-color', '#' + hex)
+            : $('.preview').css('color', '#' + hex)
+        }
+        $('.slider_red, .slider_green, .slider_blue').slider({
+          orientation: 'horizontal',
+          range: 'min',
+          max: 255,
+          slide: refreshPreview,
+          change: refreshPreview
+        })
+        $('.slider_red').slider('value', 0)
+        $('.slider_green').slider('value', 0)
+        $('.slider_blue').slider('value', 0)
+        $('.button_fg')
+          .click(() => (color.type = 'fg'))
+          .css('background-color', color.type === 'fg' ? 'cornflowerblue' : 'white')
+        $('.button_bg')
+          .click(() => (color.type = 'bg'))
+          .css('background-color', color.type === 'bg' ? 'cornflowerblue' : 'white')
+      })
+    </script>
+  </head>
+
+  <body>
+    <h1>Color slider</h1>
+    <h2>Select color:</h2>
+    <button class="ui-button ui-widget ui-corner-all button_fg">color</button>
+    <button class="ui-button ui-widget ui-corner-all button_bg">backgroundColor</button>
+    <div class="container">
+      <div>
+        <div class="slider_red"></div>
+        <div class="slider_green"></div>
+        <div class="slider_blue"></div>
+      </div>
+      <div class="preview">
+        Lorem ipsum, dolor sit amet consectetur adipisicing elit. At, officia.
+      </div>
+    </div>
+  </body>
+</html>
+<style>
+  * {
+    font-family: sans-serif;
+  }
+  body {
+    width: 500px;
+    height: 300px;
+    margin: auto;
+  }
+  .slider_red,
+  .slider_green,
+  .slider_blue {
+    float: left;
+    clear: left;
+    width: 300px;
+    margin: 15px;
+  }
+  .slider_red .ui-slider-range {
+    background: #ef2929;
+  }
+  .slider_red .ui-slider-handle {
+    border-color: #ef2929;
+  }
+  .slider_green .ui-slider-range {
+    background: #8ae234;
+  }
+  .slider_green .ui-slider-handle {
+    border-color: #8ae234;
+  }
+  .slider_blue .ui-slider-range {
+    background: #729fcf;
+  }
+  .slider_blue .ui-slider-handle {
+    border-color: #729fcf;
+  }
+  .slider_red {
+    color: red;
+  }
+  .container {
+    display: flex;
+  }
+  .preview {
+    width: 200px;
+    height: 100px;
+    text-align: center;
+    padding: 20px;
+    font-size: 19px;
+    border: 2px solid gainsboro;
+    border-radius: 4px;
+  }
+</style>
